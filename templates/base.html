@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block doc-title %}{% endblock %}Lighability</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+  <nav id="nav">
+    <ul>
+      <li id="nav__add_company"><a href="{% url 'new_company' %}">Add</a></li>
+      <li id="nav__header"><a href="{% url 'index' %}"><h1>Lighability</h1></a></li>
+      {% if user.is_authenticated %}
+      <li class="nav__user_action"><a href="{% url 'logout' %}">Logout</a></li>
+      {% else %}
+      <li class="nav__user_action"><a href="{% url 'login' %}">Login</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% block content %}{% endblock %}
+</body>
+</html>

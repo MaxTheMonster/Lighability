@@ -1,0 +1,23 @@
+<h2>{{ company.name }}</h2>
+<ul>
+  <li>Location: {{ company.location }}</li>
+  <li>Posted on: {{ company.time }} by <em>{{ company.user }}</em></li>
+  
+  {% if images %}
+  <h3>Images</h3>
+  {% for image in images %}
+    <img src="{{ image }}" height="300px">
+  {% endfor %}
+  {% else %}
+  <h3>No Images</h3>
+  {% endif %}
+  <h3>Add Image</h3>
+  <form method="post" enctype='multipart/form-data'>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Add Image">
+  </form>
+</ul>
+{% if company.user == user %}
+<a href="{% url 'edit' company.pk company.slug %}">Edit</a>
+{% endif %}
