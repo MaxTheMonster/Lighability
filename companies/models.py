@@ -1,10 +1,13 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from django.core.urlresolvers import reverse
 from django.utils.text import slugify
 
 
+class User(AbstractUser):
+  points = models.IntegerField(default=1)
+  profile_picture = models.FileField(upload_to='profile_pictures/')
 
 class Company(models.Model):
   SEVERITY = (("1", "First"), ("2", "Second"), ("3", "Third"), ("4", "Fourth"), ("5", "Fifth"), ("6", "Sixth"), ("7", "Seventh"),)
@@ -12,7 +15,7 @@ class Company(models.Model):
   location = models.CharField(max_length=140)
   # image = models.FileField(upload_to='company_images/')
   severity = models.CharField(choices=SEVERITY, max_length=12, default="Second")
-  time = models.DateTimeField(default=timezone.now())
+  time = models.DateTimeField(default=timezone.now)
   user = models.ForeignKey(User, related_name="company")
   slug = models.SlugField(editable=False)
 
@@ -30,7 +33,7 @@ class Company(models.Model):
 
 class Image(models.Model):
   file = models.FileField(upload_to='company_images/')
-  time = models.DateTimeField(default=timezone.now())
+  time = models.DateTimeField(default=timezone.now)
   user = models.ForeignKey(User, related_name="company_image")
   company = models.ForeignKey(Company, on_delete=models.CASCADE)
 

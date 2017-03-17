@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import generic
 
-from . import models
+from . import models, forms
 
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
@@ -24,9 +24,8 @@ class IndexView(generic.TemplateView):
 class HomeView(generic.CreateView):
   template_name = "home.html"
   model = models.Image
-  fields = ("file", "company")
+  fields = ("file",)
   success_url = "/"
- 
   
   def dispatch(self, request, *args, **kwargs):
     self.current_user = request.user
@@ -93,8 +92,8 @@ class CompanyDetail(generic.CreateView):
 
 class RegisterView(generic.CreateView):
   template_name = "register.html"
-  form_class = UserCreationForm
-  success_url = "/home/"
+  form_class = forms.UserCreationForm
+  success_url = "/login/"
 
 
 class LoginView(generic.FormView):

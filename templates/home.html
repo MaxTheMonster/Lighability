@@ -3,7 +3,7 @@
 {% block doc-title %}Home - {% endblock %}
 
 {% block content %}
-<h2>Welcome home <em>{{ user.username }}</em></h2>
+<h2>Welcome home <em>{{ user.username }}</em> ( {{ user.points }} )</h2>
 
 <section class="user-companies">
   <h3>Companies you have posted.</h3>
@@ -20,12 +20,13 @@
           <li>Location: {{ company.location }}</li>
           <li>Posted on: {{ company.time }}</li>
         </ul>
-        <h2>Add Image</h2>
+        <!-- <h2>Add Image</h2>
         <form method="post" enctype='multipart/form-data'>
           {% csrf_token %}
           {{ form.as_p }}
+          <input type="hidden" name="company" value="{{ company }}">
           <input type="submit" value="Add Image">
-        </form>
+        </form> -->
         <a href="{% url 'edit' company.pk company.slug %}">Edit</a>
       </div>
       <div class="user-companies__company_serverity">
