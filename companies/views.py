@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
 
@@ -53,7 +53,7 @@ class HomeView(generic.CreateView):
 
 
 class AddCompany(generic.CreateView):
-  fields = ("name", "location", "severity")
+  fields = ("name", "address", "severity")
   model = models.Company
   template_name = "add_company.html"
   success_url = "/"
@@ -64,7 +64,7 @@ class AddCompany(generic.CreateView):
 
 
 class EditCompany(generic.UpdateView):
-  fields = ("name", "location", "severity")
+  fields = ("name", "address", "severity")
   model = models.Company
   pk_url_kwarg = 'company_id'
   slug_url_kwarg = 'company_slug'
@@ -94,6 +94,25 @@ class RegisterView(generic.CreateView):
   template_name = "register.html"
   form_class = forms.UserCreationForm
   success_url = "/login/"
+
+
+class EditUser(generic.UpdateView):
+  model = models.User
+  template_name = "edit_user.html"
+  fields = ("profile_picture", "email")
+
+  def get_object(self, queryset=None):
+    obj = models.User.objects.get(username=self.kwargs["username"])
+    return obj
+
+class UserProfile(generic.DetailView):
+  model = models.User
+  template_name = "user_profile.html"
+  context_object_name = "current_user"
+
+  def get_object(self, queryset=None):
+    user = models.User.objects.get(username=self.kwargs["username"])
+    return user
 
 
 class LoginView(generic.FormView):

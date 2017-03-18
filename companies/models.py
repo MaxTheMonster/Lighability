@@ -9,14 +9,18 @@ class User(AbstractUser):
   points = models.IntegerField(default=1)
   profile_picture = models.FileField(upload_to='profile_pictures/')
 
+  def get_absolute_url(self):
+    return reverse("user_profile", kwargs={"username": self.username})
+
 class Company(models.Model):
   SEVERITY = (("1", "First"), ("2", "Second"), ("3", "Third"), ("4", "Fourth"), ("5", "Fifth"), ("6", "Sixth"), ("7", "Seventh"),)
   name = models.CharField(max_length=128)
-  location = models.CharField(max_length=140)
-  # image = models.FileField(upload_to='company_images/')
+  address = models.CharField(max_length=140)
+  longitude = models.IntegerField(default=1)
+  latitude = models.IntegerField(default=1)
   severity = models.CharField(choices=SEVERITY, max_length=12, default="Second")
   time = models.DateTimeField(default=timezone.now)
-  user = models.ForeignKey(User, related_name="company")
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="company")
   slug = models.SlugField(editable=False)
 
   def __str__(self):
@@ -28,7 +32,7 @@ class Company(models.Model):
     super(Company, self).save(*args, **kwargs)
 
   def get_absolute_url(self):
-    return reverse("detail", kwargs={"company_id": self.pk, "company_slug": self.slug})
+    return reverse("company_detail", kwargs={"company_id": self.pk, "company_slug": self.slug})
 
 
 class Image(models.Model):

@@ -19,5 +19,5 @@
   </form>
 </ul>
 {% if company.user == user %}
-<a href="{% url 'edit' company.pk company.slug %}">Edit</a>
+<a href="{% url 'company_edit' company.pk company.slug %}">Edit</a>
 {% endif %}

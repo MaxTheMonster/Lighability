@@ -6,11 +6,11 @@
 <section class="profile">
   <a href="{% url 'edit_user' user.username %}">Edit Profile</a>
   <div id="profile__user_info">
-    <div id="profile__points">{{ user.points }}</div>
+    <div id="profile__points">{{ current_user.points }}</div>
     <div id="profile__picture">
       <img id="profile__picture_image" src="{{ user.profile_picture.url }}" alt="{{ user.username }}s profile picture">    
     </div>
-    <h2 id="profile__username">{{ user.username }} | Joined {{ user.date_joined|date:"m/d/y" }}</h2>
+    <h2 id="profile__username">{{ current_user.username }} | Joined {{ current_user.date_joined|date:"m/d/y" }}</h2>
 </div>
 </section>
 <section class="user-companies">

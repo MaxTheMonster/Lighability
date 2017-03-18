@@ -23,10 +23,14 @@ a {
   a:hover {
     text-decoration: underline; }
 
+div, section, header {
+  padding: 1em; }
+
 /* -=-=-=-=-=-=-=-=- Main Styles -=-=-=-=-=-=-=-=- */
 .severity {
   height: 100%;
-  width: 10%; }
+  width: 10%;
+  display: block; }
 
 .severity-1 {
   flex-grow: 1;
@@ -115,7 +119,8 @@ a {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start; }
-  .user-companies h3 {
+  .user-companies h2 {
+    font-size: 1.5em;
     width: 100%; }
   .user-companies .user-companies__company {
     margin: 1em;
@@ -136,7 +141,7 @@ a {
       width: 100%;
       min-height: auto;
       max-height: 50%;
-      background: red;
+      background: rbga(0, 0, 0, 0.6);
       margin: 0 auto;
       display: block;
       padding: 0; }
@@ -148,12 +153,46 @@ a {
       display: flex;
       position: absolute;
       bottom: 0;
-      left: 0; }
+      left: 0;
+      padding: 0; }
       .user-companies .user-companies__company .user-companies__company_serverity .user-companies__severity {
         position: absolute;
         right: 1em;
         font-size: 20px;
         color: #37323E;
         bottom: calc(1em + 10px); }
+
+section.profile {
+  display: flex;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.05); }
+  section.profile #profile__user_info {
+    margin: 0 auto;
+    position: relative; }
+    section.profile #profile__user_info #profile__points {
+      position: absolute;
+      font-family: "Varela Round", sans-serif;
+      font-size: 1.5em;
+      background: #ffe179;
+      color: black;
+      border: 4px solid #F8C000;
+      border-radius: 50%;
+      width: 2em;
+      height: 2em;
+      display: flex;
+      align-items: center;
+      padding: 0.5em; }
+    section.profile #profile__user_info #profile__picture {
+      width: 100%; }
+      section.profile #profile__user_info #profile__picture #profile__picture_image {
+        margin: 0 auto;
+        display: block;
+        border-radius: 50%;
+        height: 10em;
+        width: 10em; }
+    section.profile #profile__user_info #profile__username {
+      text-align: center;
+      display: block; }
 
 /*# sourceMappingURL=styles.css.map */
