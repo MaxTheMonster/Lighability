@@ -4,17 +4,19 @@
 
 {% block content %}
 <section class="profile">
+  {% if user.is_authenticated %}
   <a href="{% url 'edit_user' user.username %}">Edit Profile</a>
+  {% endif %}
   <div id="profile__user_info">
     <div id="profile__points">{{ current_user.points }}</div>
     <div id="profile__picture">
-      <img id="profile__picture_image" src="{{ user.profile_picture.url }}" alt="{{ user.username }}s profile picture">    
+      <img id="profile__picture_image" src="{{ current_user.profile_picture.url }}" alt="{{ user.username }}s profile picture">    
     </div>
     <h2 id="profile__username">{{ current_user.username }} | Joined {{ current_user.date_joined|date:"m/d/y" }}</h2>
 </div>
 </section>
 <section class="user-companies">
-  <h2>Your companies.</h2>
+  <h2>Companies {{ current_user.username }} has submitted.</h2>
   
     {% for company in companies %}
     {% for image in company_images %}

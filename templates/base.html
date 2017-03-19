@@ -14,6 +14,13 @@
       <li id="nav__header"><a href="{% url 'index' %}"><h1>Lighability</h1></a></li>
       {% if user.is_authenticated %}
       <li class="nav__user_action"><a href="{% url 'user_logout' %}">Logout</a></li>
+      <li id="nav__user">
+        <div class="nav__user_icon">
+          <a href="{% url 'user_profile' user.username %}">
+          <img id="nav__user_icon_image" src="{{ user.profile_picture.url }}" alt="{{ user.username }}s profile picture">
+          </a>
+        </div>
+      </li>
       {% else %}
       
       <li class="nav__user_action"><a href="{% url 'user_login' %}">Login</a></li>
@@ -21,5 +28,9 @@
     </ul>
   </nav>
   {% block content %}{% endblock %}
+
+  <script>
+    
+  </script>
 </body>
 </html>

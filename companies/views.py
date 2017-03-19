@@ -9,6 +9,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class IndexView(generic.TemplateView):
@@ -52,7 +53,7 @@ class HomeView(generic.CreateView):
     return super(HomeView, self).form_valid(form)
 
 
-class AddCompany(generic.CreateView):
+class AddCompany(LoginRequiredMixin, generic.CreateView):
   fields = ("name", "address", "severity")
   model = models.Company
   template_name = "add_company.html"
@@ -63,7 +64,7 @@ class AddCompany(generic.CreateView):
     return super(AddCompany, self).form_valid(form)
 
 
-class EditCompany(generic.UpdateView):
+class EditCompany(LoginRequiredMixin, generic.UpdateView):
   fields = ("name", "address", "severity")
   model = models.Company
   pk_url_kwarg = 'company_id'
@@ -96,7 +97,7 @@ class RegisterView(generic.CreateView):
   success_url = "/login/"
 
 
-class EditUser(generic.UpdateView):
+class EditUser(LoginRequiredMixin, generic.UpdateView):
   model = models.User
   template_name = "edit_user.html"
   fields = ("profile_picture", "email")
@@ -114,6 +115,22 @@ class UserProfile(generic.DetailView):
     user = models.User.objects.get(username=self.kwargs["username"])
     return user
 
+  def dispatch(self, request, *args, **kwargs):
+    self.current_user = self.get_object()
+    self.company_images = []
+    self.companies = models.Company.objects.filter(user__exact=self.current_user)
+
+    for company in self.companies:
+      latest_company_image = models.Image.objects.filter(company=company)[:1]
+      self.company_images.append([company.pk, latest_company_image])
+
+    return super(UserProfile, self).dispatch(request, *args, **kwargs)
+
+  def get_context_data(self, **kwargs):
+    context = super(UserProfile, self).get_context_data(**kwargs)
+    context['companies'] = self.companies
+    context['company_images'] = self.company_images
+    return context
 
 class LoginView(generic.FormView):
   template_name = "login.html"

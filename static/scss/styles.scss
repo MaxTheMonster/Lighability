@@ -133,8 +133,6 @@ div, section, header {
   background: white;
   border-bottom: 3px solid rgba(0,0,0,0.1);
   //box-shadow:  0 4px 40px -3px rgba(0,0,0,0.4);
-  
-
 
   ul {
     margin: 0;
@@ -166,6 +164,21 @@ div, section, header {
 
         &:hover {
           color: lighten($primary-gray, 25%);
+        }
+      }
+    }
+
+    li#nav__user {
+      #nav__user_icon_image {
+        width: 2em;
+        height: 2em;
+        border-radius: 50%;
+        transition: $transition;
+
+        &:hover {
+          transform: scale(1.5);
+          border: 3px solid $primary-yellow;
+          transition: $transition;
         }
       }
     }

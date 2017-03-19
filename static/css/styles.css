@@ -91,6 +91,15 @@ div, section, header {
             font-size: 1em; } }
         #nav ul li a:hover {
           color: #766b85; }
+    #nav ul li#nav__user #nav__user_icon_image {
+      width: 2em;
+      height: 2em;
+      border-radius: 50%;
+      transition: 0.3s all; }
+      #nav ul li#nav__user #nav__user_icon_image:hover {
+        transform: scale(1.5);
+        border: 3px solid #F8C000;
+        transition: 0.3s all; }
     #nav ul li#nav__add_company a {
       padding: 0.15em 2.5em;
       background: #52AA5E;
