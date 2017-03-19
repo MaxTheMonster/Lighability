@@ -66,7 +66,7 @@ div, section, header {
   padding: 0;
   background: white;
   border-bottom: 3px solid rgba(0, 0, 0, 0.1); }
-  #nav ul {
+  #nav ul#nav__list {
     margin: 0;
     padding: 0.3em;
     display: flex;
@@ -74,53 +74,82 @@ div, section, header {
     justify-content: center;
     align-items: center; }
     @media (max-width: 540px) {
-      #nav ul {
+      #nav ul#nav__list {
         flex-wrap: wrap; } }
-    #nav ul li {
+    #nav ul#nav__list li.nav__item {
       flex-grow: 1;
       margin-left: 0;
       list-style-type: none;
       display: inline; }
-      #nav ul li a {
+      #nav ul#nav__list li.nav__item a {
         font-size: 1.5em;
         font-family: "Varela Round", sans-serif;
         color: #37323E;
         text-decoration: none; }
         @media (max-width: 540px) {
-          #nav ul li a {
+          #nav ul#nav__list li.nav__item a {
             font-size: 1em; } }
-        #nav ul li a:hover {
+        #nav ul#nav__list li.nav__item a:hover {
           color: #766b85; }
-    #nav ul li#nav__user #nav__user_icon_image {
-      width: 2em;
-      height: 2em;
-      border-radius: 50%;
-      transition: 0.3s all; }
-      #nav ul li#nav__user #nav__user_icon_image:hover {
+    #nav ul#nav__list li#nav__user #nav__user_icon {
+      position: relative; }
+      #nav ul#nav__list li#nav__user #nav__user_icon #nav__user_icon_details {
+        display: none;
+        position: absolute;
+        right: 33%;
+        top: calc(3vw + 2em);
+        background: #eae8ed;
+        border-radius: 5px;
+        padding: 0; }
+        #nav ul#nav__list li#nav__user #nav__user_icon #nav__user_icon_details ul {
+          padding: 0;
+          margin: 0;
+          transition: 0.3s all; }
+          #nav ul#nav__list li#nav__user #nav__user_icon #nav__user_icon_details ul li {
+            list-style-type: none;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            width: 100%;
+            padding: 1em; }
+            #nav ul#nav__list li#nav__user #nav__user_icon #nav__user_icon_details ul li a {
+              font-size: 1.2em;
+              transition: 0.3s all; }
+              #nav ul#nav__list li#nav__user #nav__user_icon #nav__user_icon_details ul li a:hover {
+                color: #F8C000;
+                transition: 0.3s all; }
+      #nav ul#nav__list li#nav__user #nav__user_icon #nav__user_icon_details.showing {
+        display: block; }
+      #nav ul#nav__list li#nav__user #nav__user_icon #nav__user_icon_image {
+        width: 3vw;
+        height: 3vw;
+        position: relative;
+        border-radius: 50%;
+        transition: 0.3s all;
+        cursor: pointer; }
+      #nav ul#nav__list li#nav__user #nav__user_icon .icon_image_showing {
         transform: scale(1.5);
         border: 3px solid #F8C000;
         transition: 0.3s all; }
-    #nav ul li#nav__add_company a {
+    #nav ul#nav__list li#nav__add_company a {
       padding: 0.15em 2.5em;
       background: #52AA5E;
       border-radius: 20px;
       color: white;
       transition: 0.3s all; }
-      #nav ul li#nav__add_company a:hover {
+      #nav ul#nav__list li#nav__add_company a:hover {
         background: #96cc9d;
         transition: 0.3s all; }
-    #nav ul li#nav__header {
+    #nav ul#nav__list li#nav__header {
       color: #F8C000;
       font-size: 1.1em;
       margin: 0;
       padding: 0; }
       @media (max-width: 540px) {
-        #nav ul li#nav__header {
+        #nav ul#nav__list li#nav__header {
           width: 100vw; } }
-      #nav ul li#nav__header a {
+      #nav ul#nav__list li#nav__header a {
         transition: 0.3s all;
         color: #F8C000; }
-        #nav ul li#nav__header a:hover {
+        #nav ul#nav__list li#nav__header a:hover {
           transition: 0.3s all;
           color: #ffe179; }
 
@@ -136,7 +165,7 @@ div, section, header {
     display: inline-block;
     flex-grow: 1;
     position: relative;
-    max-width: 33%;
+    max-width: 32%;
     max-height: 70vh;
     padding: 1em;
     border: 1px solid rgba(0, 0, 0, 0.1);
@@ -144,12 +173,11 @@ div, section, header {
     border-radius: 15px 15px 0 0; }
     @media (max-width: 540px) {
       .user-companies .user-companies__company {
-        max-width: calc(100% - 2em);
+        min-width: 32%;
         margin: 1em auto; } }
     .user-companies .user-companies__company .user-companies__image {
       width: 100%;
-      min-height: auto;
-      max-height: 50%;
+      height: 300px;
       background: rbga(0, 0, 0, 0.6);
       margin: 0 auto;
       display: block;

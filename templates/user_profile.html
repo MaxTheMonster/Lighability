@@ -22,7 +22,7 @@
     {% for image in company_images %}
     {% if image.0 == company.pk %}
     <div class="user-companies__company company">
-      <img class="user-companies__image" src="{{ image.1.0 }}">
+      <div class="user-companies__image" style="background-image: url('{{ image.1.0 }}'); background-size: cover;"></div>
       <div class="user-companies__content">
         <a href="{% url 'company_detail' company.pk company.slug %}"><h1>{{ company.name }}</h1></a> 
         <ul>

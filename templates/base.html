@@ -9,28 +9,53 @@
 </head>
 <body>
   <nav id="nav">
-    <ul>
-      <li id="nav__add_company"><a href="{% url 'new_company' %}">Add</a></li>
-      <li id="nav__header"><a href="{% url 'index' %}"><h1>Lighability</h1></a></li>
+    <ul id="nav__list">
+      <li class="nav__item" id="nav__add_company"><a href="{% url 'new_company' %}">Add</a></li>
+      <li class="nav__item" id="nav__header"><a href="{% url 'index' %}"><h1>Lighability</h1></a></li>
       {% if user.is_authenticated %}
-      <li class="nav__user_action"><a href="{% url 'user_logout' %}">Logout</a></li>
-      <li id="nav__user">
-        <div class="nav__user_icon">
-          <a href="{% url 'user_profile' user.username %}">
-          <img id="nav__user_icon_image" src="{{ user.profile_picture.url }}" alt="{{ user.username }}s profile picture">
-          </a>
+      <li class="nav__item" id="nav__user">
+        <div id="nav__user_icon">
+<!--           <a id="nav__user_icon_link" href="{% url 'user_profile' user.username %}">
+ -->      <img id="nav__user_icon_image" src="{{ user.profile_picture.url }}" alt="{{ user.username }}s profile picture">
+          <div id="nav__user_icon_details">
+            <ul>
+              <li><a href="{% url 'user_profile' user.username %}">Profile</a></li>
+              <li><a href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+          </div>
         </div>
       </li>
       {% else %}
       
-      <li class="nav__user_action"><a href="{% url 'user_login' %}">Login</a></li>
+      <li class="nav__user_action"><a href="{% url 'login' %}">Login</a></li>
       {% endif %}
     </ul>
   </nav>
   {% block content %}{% endblock %}
 
   <script>
-    
+    const user_profile_icon = document.querySelector("#nav__user_icon_image");
+    const user_profile_details = document.querySelector("#nav__user_icon_details");
+
+    user_profile_icon.addEventListener("mousedown", function() {
+      user_profile_icon.classList.toggle("icon_image_showing");
+      user_profile_details.classList.toggle("showing");
+    });
+
+    function getJSONP(url, success) {
+      var ud = '_' + +new Date,
+          script = document.createElement('script'),
+          head = document.getElementsByTagName('head')[0] 
+                 || document.documentElement;
+      window[ud] = function(data) {
+          head.removeChild(script);
+          success && success(data);
+      };
+      script.src = url.replace('callback=?', 'callback=' + ud);
+      head.appendChild(script);
+    }
+
+    console.log(`https://api.foursquare.com/v2/venues/search?ll=51.5031247,-0.1916125&oauth_token=YGDDK5HDOKGR21Q1QERJDBLCUKWBZA0VQHKUVJZN214ZPZV0&v=20170319`);
   </script>
 </body>
 </html>

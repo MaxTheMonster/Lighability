@@ -7,8 +7,8 @@ urlpatterns = [
   url(r'^$', views.IndexView.as_view(), name="index"),
   
   url(r'^home/', views.HomeView.as_view(), name="home"),
-  url(r'^logout/$', views.LogoutView.as_view(), name="user_logout"),
-  url(r'^login/$', views.LoginView.as_view(), name="user_login"),
+  url(r'^logout/$', views.LogoutView.as_view(), name="logout"),
+  url(r'^login/$', views.LoginView.as_view(), name="login"),
   url(r'^register/$', views.RegisterView.as_view(), name="user_register"),
   url(r'^user/(?P<username>.+)/$', views.UserProfile.as_view(), name="user_profile"),
   url(r'^user/(?P<username>.+)/edit/$', views.EditUser.as_view(), name="edit_user"),
