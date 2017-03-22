@@ -5,9 +5,15 @@
 {% block content %}
 <h1>Add a new company</h1>
 
-<form method="post" enctype="multipart/form-data">
+<form method="POST" autocomplete="off">
   {% csrf_token %}
   {{ form.as_p }}
+<!--   <input type="text" id="foursquare_id" name="foursquare_id" required/>
+  <input type="text" id="address" name="address" required/>
+  <input type="text" id="country" name="country" required/>
+  <input type="text" id="city" name="city" required/>
+  <input type="text" id="lat" name="lat" required/>
+  <input type="text" id="lng" name="lng" required/> -->
   <div class="near-companies-list">
     <ul>
       
@@ -18,15 +24,35 @@
 
 <script>
 const companies_output = document.querySelector(".near-companies-list ul");
+const form = document.querySelector("form");
+const foursquare_id = document.querySelector("form input[name=foursquare_id]");
+const city = document.querySelector("form input[name=city]");
+const country = document.querySelector("form input[name=country]");
+const address = document.querySelector("form input[name=address]");
+const lng = document.querySelector("form input[name=lng]");
+const lat = document.querySelector("form input[name=lat]");
+
 var companies = "";
 
 function addFields(i) {
   console.log(companies[i]);
   var current_company = document.querySelector("#company-" + i + " .company-hidden-fields");
-  current_company.innerHTML = `
-  <input type="hidden" name="foursquare_id" value="${companies[i]["id"]}">
-  <input type="hidden" name="address" value="${companies[i]["location"]["address"]}">
-  `;
+  for (var a=0; a < companies.length; a++) {
+    var checking_company = document.querySelector("#company-" + a + " .company-hidden-fields");
+    checking_company.innerHTML = "";
+  }
+  // current_company.innerHTML = `
+  // <input type="hidden" name="foursquare_id" value="${companies[i]['id']}" required/>
+  // <input type="hidden" name="address" value="${companies[i]['location']['address']}" required/>
+  // <input type="hidden" name="country" value="${companies[i]['location']['country']}" required/>
+  // <input type="hidden" name="city" value="${companies[i]['location']['city']}" required/>`;
+  city.value = companies[i]['location']['city'];
+  foursquare_id.value = companies[i]['id'];
+  address.value = companies[i]['location']['address'];
+  country.value = companies[i]['location']['country'];
+  lat.value = companies[i]['location']["lat"];
+  lng.value = companies[i]['location']["lng"];
+  console.log(lng.value);
 }
 
 function get_data(pos) {
@@ -34,7 +60,8 @@ function get_data(pos) {
   console.log('Your current position is:');
   console.log(`Latitude : ${crd.latitude}`);
   console.log(`Longitude: ${crd.longitude}`);
-  console.log(`More or less ${crd.accuracy} meters.`);
+
+  
 
   var query = "https://api.foursquare.com/v2/venues/search?ll="+ crd.latitude + "," + crd.longitude +"&oauth_token=YGDDK5HDOKGR21Q1QERJDBLCUKWBZA0VQHKUVJZN214ZPZV0&v=20170321";
   console.log(query);
@@ -51,11 +78,15 @@ function get_data(pos) {
   for (var i=0; i < companies.length; i++) {
     companies_list.push(companies[i]);
     companies_output.innerHTML += `<li id="company-${i}"><label>
-      <input type="radio" onclick="javascript:addFields(${i});" name="company" value="${companies[i]}">
+      <input type="radio" onclick="javascript:addFields(${i});" name="name" value="${companies[i]["name"]}" required/>
       ${companies[i]["name"]}
       </label>
       <div class="company-hidden-fields"></div></li>`;
   }
+  // form.innerHTML += `<input type="hidden" name="lat" value="${crd.latitude}" required/><input type="hidden" name="lng" value="${crd.longitude}" required/>
+  // `;
+  lat.value = crd.latitude;
+  lng.value = crd.longitude;
 }
 
 function error() {

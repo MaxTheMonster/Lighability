@@ -44,7 +44,9 @@ class HomeView(generic.CreateView):
 
   def get_context_data(self, **kwargs):
     context = super(HomeView, self).get_context_data(**kwargs)
-    context['companies'] = self.companies
+    if self.companies.exists():
+      context['companies'] = self.companies
+
     context['company_images'] = self.company_images
     return context
 
@@ -54,7 +56,7 @@ class HomeView(generic.CreateView):
 
 
 class AddCompany(LoginRequiredMixin, generic.CreateView):
-  fields = ("severity",)
+  form_class = forms.CompanyCreationForm
   model = models.Company
   template_name = "add_company.html"
   success_url = "/"
