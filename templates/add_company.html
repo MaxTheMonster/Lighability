@@ -8,6 +8,66 @@
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
   {{ form.as_p }}
+  <div class="near-companies-list">
+    <ul>
+      
+    </ul>
+  </div>
   <input type="submit">
 </form>
+
+<script>
+const companies_output = document.querySelector(".near-companies-list ul");
+var companies = "";
+
+function addFields(i) {
+  console.log(companies[i]);
+  var current_company = document.querySelector("#company-" + i + " .company-hidden-fields");
+  current_company.innerHTML = `
+  <input type="hidden" name="foursquare_id" value="${companies[i]["id"]}">
+  <input type="hidden" name="address" value="${companies[i]["location"]["address"]}">
+  `;
+}
+
+function get_data(pos) {
+  var crd = pos.coords;
+  console.log('Your current position is:');
+  console.log(`Latitude : ${crd.latitude}`);
+  console.log(`Longitude: ${crd.longitude}`);
+  console.log(`More or less ${crd.accuracy} meters.`);
+
+  var query = "https://api.foursquare.com/v2/venues/search?ll="+ crd.latitude + "," + crd.longitude +"&oauth_token=YGDDK5HDOKGR21Q1QERJDBLCUKWBZA0VQHKUVJZN214ZPZV0&v=20170321";
+  console.log(query);
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", query, false);
+  xhr.send();
+
+  var jsonResponse = JSON.parse(xhr.responseText);
+   console.log(jsonResponse);
+  var companies_list = [];
+  companies = jsonResponse["response"]["venues"];
+
+  for (var i=0; i < companies.length; i++) {
+    companies_list.push(companies[i]);
+    companies_output.innerHTML += `<li id="company-${i}"><label>
+      <input type="radio" onclick="javascript:addFields(${i});" name="company" value="${companies[i]}">
+      ${companies[i]["name"]}
+      </label>
+      <div class="company-hidden-fields"></div></li>`;
+  }
+}
+
+function error() {
+  console.log("Can't find ya");
+}
+
+if ("geolocation" in navigator) {
+  console.log("yes");
+  navigator.geolocation.getCurrentPosition(get_data, error);
+} else {
+  console.log("NO");
+}
+
+</script>
 {% endblock %}

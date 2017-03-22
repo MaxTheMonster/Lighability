@@ -41,21 +41,7 @@
       user_profile_icon.classList.toggle("icon_image_showing");
       user_profile_details.classList.toggle("showing");
     });
-
-    function getJSONP(url, success) {
-      var ud = '_' + +new Date,
-          script = document.createElement('script'),
-          head = document.getElementsByTagName('head')[0] 
-                 || document.documentElement;
-      window[ud] = function(data) {
-          head.removeChild(script);
-          success && success(data);
-      };
-      script.src = url.replace('callback=?', 'callback=' + ud);
-      head.appendChild(script);
-    }
-
-    console.log(`https://api.foursquare.com/v2/venues/search?ll=51.5031247,-0.1916125&oauth_token=YGDDK5HDOKGR21Q1QERJDBLCUKWBZA0VQHKUVJZN214ZPZV0&v=20170319`);
   </script>
+  
 </body>
 </html>

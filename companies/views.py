@@ -54,7 +54,7 @@ class HomeView(generic.CreateView):
 
 
 class AddCompany(LoginRequiredMixin, generic.CreateView):
-  fields = ("name", "address", "severity")
+  fields = ("severity",)
   model = models.Company
   template_name = "add_company.html"
   success_url = "/"
