@@ -23,8 +23,8 @@ a {
   a:hover {
     text-decoration: underline; }
 
-div, section, header {
-  padding: 1em; }
+section, header {
+  padding: 0.1em; }
 
 /* -=-=-=-=-=-=-=-=- Main Styles -=-=-=-=-=-=-=-=- */
 .severity {
