@@ -14,7 +14,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 class IndexView(generic.TemplateView):
   template_name = "index.html" 
-
   def dispatch(self, request, *args, **kwargs):
     if request.user.is_authenticated():
       return redirect("home")
@@ -54,10 +53,17 @@ class HomeView(generic.CreateView):
     form.instance.user = self.request.user
     return super(HomeView, self).form_valid(form)
 
+# class AddImage(LoginRequiredMixin, generic.CreateView):
+#   model = models.Image
+#   template_name = "add_company.html"
+#   success_url = reverse("home")
+
+
 
 class AddCompany(LoginRequiredMixin, generic.CreateView):
   form_class = forms.CompanyCreationForm
   model = models.Company
+  queryset = models.Image
   template_name = "add_company.html"
   success_url = "/"
  

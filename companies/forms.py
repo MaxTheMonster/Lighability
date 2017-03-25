@@ -8,7 +8,7 @@ class UserCreationForm(UserCreationForm):
 
   class Meta:
       model = User
-      fields = ("username", "profile_picture", "email", )
+      fields = ("username", "profile_picture", "email",)
 
 class CompanyCreationForm(forms.ModelForm):
   address = forms.CharField(widget=forms.HiddenInput())

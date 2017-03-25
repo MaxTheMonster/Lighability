@@ -2,8 +2,16 @@
 
 {% block title %}Add a new company - {% endblock %}
 
+{% block header %}
+<link rel="stylesheet" type="text/css" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+
+<script type='text/javascript' src='//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js'></script>
+<script type='text/javascript' src='http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js'></script>
+{% endblock %}
+
 {% block content %}
 <h1>Add a new company</h1>
+     
 
 <form method="POST" autocomplete="off">
   {% csrf_token %}
@@ -14,11 +22,13 @@
   <input type="text" id="city" name="city" required/>
   <input type="text" id="lat" name="lat" required/>
   <input type="text" id="lng" name="lng" required/> -->
+  <div id="map" style="height: 440px; border: 1px solid #AAA;"></div>
   <div class="near-companies-list">
     <ul>
       
     </ul>
   </div>
+
   <input type="submit">
 </form>
 
@@ -36,11 +46,11 @@ var companies = "";
 
 function addFields(i) {
   console.log(companies[i]);
-  var current_company = document.querySelector("#company-" + i + " .company-hidden-fields");
-  for (var a=0; a < companies.length; a++) {
-    var checking_company = document.querySelector("#company-" + a + " .company-hidden-fields");
-    checking_company.innerHTML = "";
-  }
+  // var current_company = document.querySelector("#company-" + i + " .company-hidden-fields");
+  // for (var a=0; a < companies.length; a++) {
+  //   var checking_company = document.querySelector("#company-" + a + " .company-hidden-fields");
+  //   checking_company.innerHTML = "";
+  // }
   // current_company.innerHTML = `
   // <input type="hidden" name="foursquare_id" value="${companies[i]['id']}" required/>
   // <input type="hidden" name="address" value="${companies[i]['location']['address']}" required/>
@@ -63,8 +73,7 @@ function get_data(pos) {
 
   
 
-  var query = "https://api.foursquare.com/v2/venues/search?ll="+ crd.latitude + "," + crd.longitude +"&oauth_token=YGDDK5HDOKGR21Q1QERJDBLCUKWBZA0VQHKUVJZN214ZPZV0&v=20170321";
-  console.log(query);
+  var query = "https://api.foursquare.com/v2/venues/search?limit=10&ll="+ crd.latitude + "," + crd.longitude +"&oauth_token=YGDDK5HDOKGR21Q1QERJDBLCUKWBZA0VQHKUVJZN214ZPZV0&v=20170321";
 
   var xhr = new XMLHttpRequest();
   xhr.open("GET", query, false);
@@ -81,7 +90,13 @@ function get_data(pos) {
       <input type="radio" onclick="javascript:addFields(${i});" name="name" value="${companies[i]["name"]}" required/>
       ${companies[i]["name"]}
       </label>
-      <div class="company-hidden-fields"></div></li>`;
+      <div class="company-submitting-info">
+      <ul>
+        <li>Address: ${companies[i]["location"]["address"]}</li>
+        <li>${companies[i]["location"]["city"]}, ${companies[i]["location"]["country"]}</li>
+        <li>${companies[i]["categories"][0]["name"]}</li>
+      </ul>
+      </div></li>`;
   }
   // form.innerHTML += `<input type="hidden" name="lat" value="${crd.latitude}" required/><input type="hidden" name="lng" value="${crd.longitude}" required/>
   // `;
