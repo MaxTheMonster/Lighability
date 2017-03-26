@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views import generic
+from django.http import HttpResponse
 
 from . import models, forms
 
@@ -9,8 +10,11 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.contrib.auth.mixins import LoginRequiredMixin
+from .mixins import LoginRequiredMixin
 
+
+def acme_challenge(request):
+  return HttpResponse("xfwlESrL8G9_Hej_f2PmbIW7omDOI5EJ5_vNZWJMV8Y.2OXdbVpxGpevFCIkLxGlCf2yjkAuMs2vIm_p95hqFoM")
 
 class IndexView(generic.TemplateView):
   template_name = "index.html" 
