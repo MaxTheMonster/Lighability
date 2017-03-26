@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.views import generic
 from django.conf import settings
 from companies import views
+from django.conf.urls.static import static
 
 
 urlpatterns = [
@@ -18,12 +19,7 @@ urlpatterns = [
   url(r'^companies/(?P<company_id>[^/]+)/(?P<company_slug>[-\w]+)/$', views.CompanyDetail.as_view(), name="company_detail"),
   url(r'^companies/(?P<company_id>[^/]+)/(?P<company_slug>[-\w]+)/edit/$', views.EditCompany.as_view(), name="company_edit"),
   url(r'^admin/', admin.site.urls),
-  url(r'^.well-known/acme-challenge/xfwlESrL8G9_Hej_f2PmbIW7omDOI5EJ5_vNZWJMV8Y/', views.acme_challenge),
-]
+  url(r'^.well-known/acme-challenge/sTUy2i83Bh52nTy9w6Hx7KGRBhSSy9ujbqNn0r7EZaQ/', views.acme_challenge, name="acme-challenge"),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-
-if settings.DEBUG:
-  urlpatterns += url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
-          'document_root': settings.MEDIA_ROOT,
-      }),
         

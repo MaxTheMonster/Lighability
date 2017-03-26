@@ -14,7 +14,7 @@ from .mixins import LoginRequiredMixin
 
 
 def acme_challenge(request):
-  return HttpResponse("xfwlESrL8G9_Hej_f2PmbIW7omDOI5EJ5_vNZWJMV8Y.2OXdbVpxGpevFCIkLxGlCf2yjkAuMs2vIm_p95hqFoM")
+  return HttpResponse("sTUy2i83Bh52nTy9w6Hx7KGRBhSSy9ujbqNn0r7EZaQ.2OXdbVpxGpevFCIkLxGlCf2yjkAuMs2vIm_p95hqFoM")
 
 class IndexView(generic.TemplateView):
   template_name = "index.html" 
