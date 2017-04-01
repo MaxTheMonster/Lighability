@@ -112,7 +112,7 @@ class EditUser(LoginRequiredMixin, generic.UpdateView):
   fields = ("profile_picture", "email")
 
   def get_object(self, queryset=None):
-    obj = models.User.objects.get(username=self.kwargs["username"])
+    obj = get_object_or_404(models.User.objects.filter(username=self.kwargs["username"]))
     return obj
 
 
