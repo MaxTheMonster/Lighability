@@ -3,11 +3,26 @@ from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from django.core.urlresolvers import reverse
 from django.utils.text import slugify
+from django.core.validators import RegexValidator
+
+from Lighability.settings import STATIC_ROOT
 
 
 class User(AbstractUser):
+  username = models.CharField(
+          max_length=20,
+          unique=True,
+          validators=[RegexValidator(
+                regex='^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$',
+                message='Your username must be between 8-20 characters long, cannot have a _ or . at the beginning or end and cannot have a __ or _. or ._ or .. inside.',
+            ),
+          ],
+          error_messages={
+              'unique': ("A user with that username already exists."),
+          },
+      )
   points = models.IntegerField(default=1)
-  profile_picture = models.FileField(upload_to='profile_pictures/')
+  profile_picture = models.FileField(upload_to='profile_pictures/', default=os.path.join(STATIC_ROOT, 'img/profile.jpg'))
 
   def get_absolute_url(self):
     return reverse("user_profile", kwargs={"username": self.username})

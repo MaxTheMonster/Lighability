@@ -83,7 +83,7 @@ function get_data(pos) {
       subdomains: ['a','b','c']
   }).addTo( map );
   
-  var query = "https://api.foursquare.com/v2/venues/search?limit=10&ll="+ crd.latitude + "," + crd.longitude +"&oauth_token=YGDDK5HDOKGR21Q1QERJDBLCUKWBZA0VQHKUVJZN214ZPZV0&v=20170321";
+  var query = "https://api.foursquare.com/v2/venues/search?ll="+ crd.latitude + "," + crd.longitude +"&oauth_token=YGDDK5HDOKGR21Q1QERJDBLCUKWBZA0VQHKUVJZN214ZPZV0&v=20170321";
 
   var xhr = new XMLHttpRequest();
   xhr.open("GET", query, false);

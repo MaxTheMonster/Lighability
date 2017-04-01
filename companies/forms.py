@@ -4,7 +4,7 @@ from .models import User, Company
 
 class UserCreationForm(UserCreationForm):
   email = forms.EmailField(label = "Email")
-  profile_picture = forms.FileField(label = "Profile Picture")
+  profile_picture = forms.FileField(label = "Profile Picture", required=False)
 
   class Meta:
       model = User

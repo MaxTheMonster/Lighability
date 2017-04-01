@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic
 from django.http import HttpResponse
 
@@ -12,9 +12,6 @@ from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from .mixins import LoginRequiredMixin
 
-
-def acme_challenge(request):
-  return HttpResponse("sTUy2i83Bh52nTy9w6Hx7KGRBhSSy9ujbqNn0r7EZaQ.2OXdbVpxGpevFCIkLxGlCf2yjkAuMs2vIm_p95hqFoM")
 
 class IndexView(generic.TemplateView):
   template_name = "index.html" 
@@ -118,23 +115,26 @@ class EditUser(LoginRequiredMixin, generic.UpdateView):
     obj = models.User.objects.get(username=self.kwargs["username"])
     return obj
 
+
 class UserProfile(generic.DetailView):
   model = models.User
   template_name = "user_profile.html"
   context_object_name = "current_user"
 
   def get_object(self, queryset=None):
-    user = models.User.objects.get(username=self.kwargs["username"])
+    user = get_object_or_404(models.User.objects.filter(username=self.kwargs["username"]))
     return user
 
   def dispatch(self, request, *args, **kwargs):
     self.current_user = self.get_object()
+
     self.company_images = []
     self.companies = models.Company.objects.filter(user__exact=self.current_user)
 
     for company in self.companies:
       latest_company_image = models.Image.objects.filter(company=company)[:1]
       self.company_images.append([company.pk, latest_company_image])
+
 
     return super(UserProfile, self).dispatch(request, *args, **kwargs)
 

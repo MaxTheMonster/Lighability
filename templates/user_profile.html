@@ -27,7 +27,7 @@
         <a href="{% url 'company_detail' company.pk company.slug %}"><h1>{{ company.name }}</h1></a> 
         <ul>
           <li>Severity <span class="severity-{{ company.get_severity_display }}">{{ company.get_severity_display }}</span></li>
-          <li>Location: {{ company.location }}</li>
+          <li>Location: {{ company.address }}</li>
           <li>Posted on: {{ company.time }}</li>
         </ul>
         <!-- <h2>Add Image</h2>
