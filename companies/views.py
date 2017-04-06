@@ -60,7 +60,6 @@ class HomeView(generic.CreateView):
 #   success_url = reverse("home")
 
 
-
 class AddCompany(LoginRequiredMixin, generic.CreateView):
   form_class = forms.CompanyCreationForm
   model = models.Company

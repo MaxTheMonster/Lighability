@@ -4,12 +4,14 @@
 
 {% block header %}
 <link rel="stylesheet" type="text/css" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
-
+<script type="text/javascript"
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAoNwv8C3iccJxBz28AjLKDnf5O6yZTwGY&libraries=places">
+</script>
 <script type='text/javascript' src='http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js'></script>
 {% endblock %}
 
 {% block content %}
-<h1>Add a new company</h1>
+<h1>Add a new image</h1>
      
 
 <form method="POST" autocomplete="off">
@@ -34,6 +36,7 @@
 </form>
 
 <script>
+
 const companies_output = document.querySelector(".near-companies-list ul");
 const foursquare_id = document.querySelector("form input[name=foursquare_id]");
 const city = document.querySelector("form input[name=city]");
@@ -83,14 +86,25 @@ function get_data(pos) {
       subdomains: ['a','b','c']
   }).addTo( map );
   
-  var query = "https://api.foursquare.com/v2/venues/search?ll="+ crd.latitude + "," + crd.longitude +"&oauth_token=YGDDK5HDOKGR21Q1QERJDBLCUKWBZA0VQHKUVJZN214ZPZV0&v=20170321";
+  var user_location = new google.maps.LatLng(crd.latitude,crd.longitude);
+
+  var foursquare_query = "https://api.foursquare.com/v2/venues/search?ll="+ crd.latitude + "," + crd.longitude +"&oauth_token=YGDDK5HDOKGR21Q1QERJDBLCUKWBZA0VQHKUVJZN214ZPZV0&v=20170321";
+  
+  var google_query = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+ crd.latitude + "," + crd.longitude +"&radius=500&key=AIzaSyAy4wkQFOn43Q4StCUqOp-0brxgAo9D5hc"
+
+  var request = {
+    location: user_location,
+    radius: '200',
+  };
+
+  service = new google.maps.places.PlacesService(document.createElement('div'));
+  service.nearbySearch(request, callback);
 
   var xhr = new XMLHttpRequest();
-  xhr.open("GET", query, false);
+  xhr.open("GET", foursquare_query, false);
   xhr.send();
 
   var jsonResponse = JSON.parse(xhr.responseText);
-   console.log(jsonResponse);
   var companies_list = [];
   companies = jsonResponse["response"]["venues"];
 
@@ -110,6 +124,10 @@ function get_data(pos) {
   lng.value = crd.longitude;
 }
 
+function callback(results, status) {
+  console.log(status);
+  console.log(results);
+}
 function error() {
   console.log("Can't find ya");
 }
