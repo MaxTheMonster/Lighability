@@ -7,66 +7,70 @@
 <script type="text/javascript"
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAoNwv8C3iccJxBz28AjLKDnf5O6yZTwGY&libraries=places">
 </script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type='text/javascript' src='http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js'></script>
 {% endblock %}
 
 {% block content %}
 <h1>Add a new image</h1>
-     
 
+<!-- <form method="post" enctype='multipart/form-data'>
+{% csrf_token %}
+
+</form> -->
 <form method="POST" autocomplete="off">
   {% csrf_token %}
+  <div id="map" style="height: 600px; border: 1px solid #AAA;"></div>
   {{ form.as_p }}
-  <div id="map" style="height: 40vh; border: 1px solid #AAA;"></div>
+  
   <div class="near-companies-list">
     <ul>
       
     </ul>
   </div>
+  <div class="existing_company"></div>
   <div class="selected_company-info">
     <h1>No Company Selected</h1>
     <ul>
       <li id="selected_company-address">No Address</li>
-      <li id="selected_company-city_country">No Country</li>
       <li id="selected_company-category">No Category</li>
     </ul>
   </div>
-
-  <input type="submit">
+  <input type="submit" value="Report Company" name="submit_button-company">
 </form>
 
 <script>
-
+var map;
+var companies;
 const companies_output = document.querySelector(".near-companies-list ul");
-const foursquare_id = document.querySelector("form input[name=foursquare_id]");
-const city = document.querySelector("form input[name=city]");
-const country = document.querySelector("form input[name=country]");
+const api_id = document.querySelector("form input[name=api_id]"); 
 const address = document.querySelector("form input[name=address]");
 const lng = document.querySelector("form input[name=lng]");
 const lat = document.querySelector("form input[name=lat]");
 
 const name_info = document.querySelector(".selected_company-info h1");
-const city_country_info = document.querySelector(".selected_company-info #selected_company-city_country");
 const address_info = document.querySelector(".selected_company-info #selected_company-address");
 const category_info = document.querySelector(".selected_company-info #selected_company-category");
-
-var companies = "";
+const existing_company = document.querySelector(".existing_company");
+const form_company_submit = document.querySelector("form input[name=submit_button-company]");
 
 function addFields(i) {
   document.querySelector("#company-" + i + "-radio").checked = true;
   console.log(companies[i]);
-  city.value = companies[i]['location']['city'];
-  foursquare_id.value = companies[i]['id'];
-  address.value = companies[i]['location']['address'];
-  country.value = companies[i]['location']['country'];
-  lat.value = companies[i]['location']["lat"];
-  lng.value = companies[i]['location']["lng"];
+  api_id.value = companies[i]['place_id'];
+  $("#id_api_id").trigger('change');
+  address.value = companies[i]['vicinity'];
+  lat.value = companies[i]['geometry']['location'].lat();
+  lng.value = companies[i]['geometry']['location'].lng();
 
   name_info.innerHTML = companies[i]['name'];
-  city_country_info.innerHTML = companies[i]['location']['city'] + ", " + companies[i]['location']['country'];
-  address_info.innerHTML = companies[i]['location']['address'];
-  category_info.innerHTML = companies[i]['categories'][0]['name']; 
-  console.log(lng.value);
+  address_info.innerHTML = companies[i]['vicinity'];
+  category_info.innerHTML = companies[i]['types'][0];
+
+  existing_company.innerHTML = `<h1 class="alert">This company will be created</h1>`
+  form_company_submit.value = "Report Company";
+  form_company_submit.type = "submit";
+  form_company_submit.removeEventListener("click", function() {});
 }
 
 function get_data(pos) {
@@ -75,7 +79,8 @@ function get_data(pos) {
   console.log(`Latitude : ${crd.latitude}`);
   console.log(`Longitude: ${crd.longitude}`);
 
-  var map = L.map('map', {
+  
+  map = L.map('map', {
       center: [crd.latitude, crd.longitude],
       minZoom: 17,
       zoom: 18
@@ -85,39 +90,36 @@ function get_data(pos) {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       subdomains: ['a','b','c']
   }).addTo( map );
-  
-  var user_location = new google.maps.LatLng(crd.latitude,crd.longitude);
 
-  var foursquare_query = "https://api.foursquare.com/v2/venues/search?ll="+ crd.latitude + "," + crd.longitude +"&oauth_token=YGDDK5HDOKGR21Q1QERJDBLCUKWBZA0VQHKUVJZN214ZPZV0&v=20170321";
+  var user_location = new google.maps.LatLng(crd.latitude,crd.longitude);
   
   var google_query = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+ crd.latitude + "," + crd.longitude +"&radius=500&key=AIzaSyAy4wkQFOn43Q4StCUqOp-0brxgAo9D5hc"
 
   var request = {
     location: user_location,
-    radius: '200',
+    radius: '100',
   };
 
   service = new google.maps.places.PlacesService(document.createElement('div'));
   service.nearbySearch(request, callback);
 
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", foursquare_query, false);
-  xhr.send();
+  // var xhr = new XMLHttpRequest();
+  // xhr.open("GET", foursquare_query, false);
+  // xhr.send();
 
-  var jsonResponse = JSON.parse(xhr.responseText);
-  var companies_list = [];
-  companies = jsonResponse["response"]["venues"];
+  // var jsonResponse = JSON.parse(xhr.responseText);
+  // companies = jsonResponse["response"]["venues"];
 
-  for (var i=0; i < companies.length; i++) {
-    L.marker([companies[i]['location']["lat"], companies[i]['location']["lng"]]).addTo(map)
-        .bindPopup("<h1>" + companies[i]["name"] + "</h1><ul><li>" + companies[i]["location"]["address"] + "</li><li>" + companies[i]["location"]["city"] + ", " + companies[i]["location"]["country"] + "</li></ul><a href='#'' onclick='javascript:addFields(" +i +");'>Select</a>");
-    companies_list.push(companies[i]);
-    companies_output.innerHTML += `<li id="company-${i}"><label>
-      <input type="radio" id="company-${i}-radio" onclick="javascript:addFields(${i});" name="name" value="${companies[i]["name"]}" required/>
-      ${companies[i]["name"]}
-      </label>
-      `;
-  }
+  // for (var i=0; i < companies.length; i++) {
+  //   L.marker([companies[i]['location']["lat"], companies[i]['location']["lng"]]).addTo(map)
+  //       .bindPopup("<h1>" + companies[i]["name"] + "</h1><ul><li>" + companies[i]["location"]["address"] + "</li><li>" + companies[i]["location"]["city"] + ", " + companies[i]["location"]["country"] + "</li></ul><a href='#'' onclick='javascript:addFields(" +i +");'>Select</a>");
+  //   companies_list.push(companies[i]);
+  //   companies_output.innerHTML += `<li id="company-${i}"><label>
+  //     <input type="radio" id="company-${i}-radio" onclick="javascript:addFields(${i});" name="name" value="${companies[i]["name"]}" required/>
+  //     ${companies[i]["name"]}
+  //     </label>
+  //     `;
+  // }
   // form.innerHTML += `<input type="hidden" name="lat" value="${crd.latitude}" required/><input type="hidden" name="lng" value="${crd.longitude}" required/>
   // `;
   lat.value = crd.latitude;
@@ -126,7 +128,17 @@ function get_data(pos) {
 
 function callback(results, status) {
   console.log(status);
-  console.log(results);
+  companies = results
+  for (var i=0; i < companies.length; i++) {
+    L.marker([companies[i]['geometry']['location'].lat(), companies[i]['geometry']['location'].lng()])
+    .addTo(map)
+    .bindPopup("<h1>" + companies[i]["name"] + "</h1><ul><li>" + companies[i]["vicinity"] + "</li></ul><a href='#'' onclick='javascript:addFields(" +i +");'>Select</a>");
+    companies_output.innerHTML += `<li id="company-${i}"><label>
+      <input type="radio" id="company-${i}-radio" onclick="javascript:addFields(${i});" name="name" value="${companies[i]["name"]}" required/>
+      ${companies[i]["name"]}
+      </label>
+      `;
+  }
 }
 function error() {
   console.log("Can't find ya");
@@ -139,6 +151,28 @@ if ("geolocation" in navigator) {
   console.log("NO");
 }
 
-
+$("#id_api_id").change(function() {
+  console.log("changed")
+  var company_id = $(this).val();
+    $.ajax({
+      url: '/ajax/validate_company/',
+      data: {
+        'company_id': company_id
+      },
+      dataType: 'json',
+      success: function (data) {
+        if (data.is_taken) {
+          console.log(data);
+          
+          existing_company.innerHTML = `<h1 class='alert'>This company exists. <a href='/companies/${data.company_pk}/${data.company_slug}/'>${data.company_name}</a></h1>`
+          form_company_submit.value = "Add an Image";
+          form_company_submit.type = "button";
+          form_company_submit.addEventListener("click", function() {
+            window.location.replace("/companies/" + data.company_pk + "/" + data.company_slug + "/add");
+          });
+        }
+      }
+    });
+});
 </script>
 {% endblock %}

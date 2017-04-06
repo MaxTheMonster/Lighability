@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 from . import models, forms
 
+from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
@@ -11,6 +12,18 @@ from django.views.decorators.debug import sensitive_post_parameters
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from .mixins import LoginRequiredMixin
+
+
+def validate_company(request):
+  id = request.GET.get('company_id', None)
+  company_query = models.Company.objects.filter(api_id__iexact=id).values()
+  data = {
+      'is_taken': company_query.exists(),
+      'company_pk': company_query[0]["id"],
+      'company_name': company_query[0]["name"],
+      'company_slug': company_query[0]["slug"],
+  }
+  return JsonResponse(data)
 
 
 class IndexView(generic.TemplateView):
@@ -27,7 +40,7 @@ class HomeView(generic.CreateView):
   model = models.Image
   fields = ("file",)
   success_url = "/"
-  
+
   def dispatch(self, request, *args, **kwargs):
     self.current_user = request.user
     self.company_images = []
@@ -59,6 +72,20 @@ class HomeView(generic.CreateView):
 #   template_name = "add_company.html"
 #   success_url = reverse("home")
 
+# class CheckCompanyExistance(generic.TemplateView):
+#   def
+#   if models.Company.objects.filter(api_id=self.cleaned_data['api_id']).exists():
+
+
+class CompanyDelete(LoginRequiredMixin, generic.DeleteView):
+  model = models.Company
+  template_name = "confirm_company_delete.html"
+  success_url = reverse_lazy("home")
+  pk_url_kwarg = 'company_id'
+  slug_url_kwarg = 'company_slug'
+
+  def get_queryset(self):
+    return self.model.objects.all()
 
 class AddCompany(LoginRequiredMixin, generic.CreateView):
   form_class = forms.CompanyCreationForm
@@ -66,14 +93,23 @@ class AddCompany(LoginRequiredMixin, generic.CreateView):
   queryset = models.Image
   template_name = "add_company.html"
   success_url = "/"
- 
+
+  def post(self, request, *args, **kwargs):
+    
+
+    return super(AddCompany, self).post(request, *args, **kwargs)
+
   def form_valid(self, form):
+    # self.queryset = form.save()
+    if models.Company.objects.filter(api_id=self.get_form()['api_id']).exists():
+      print("Exists")
     form.instance.user = self.request.user
     return super(AddCompany, self).form_valid(form)
 
 
-class EditCompany(LoginRequiredMixin, generic.UpdateView):
-  fields = ("name", "address", "severity")
+
+class EditCompany(LoginRequiredMixin, generic.DeleteView, generic.UpdateView):
+  fields = ("severity", )
   model = models.Company
   pk_url_kwarg = 'company_id'
   slug_url_kwarg = 'company_slug'
@@ -97,6 +133,14 @@ class CompanyDetail(generic.CreateView):
     form.instance.company = models.Company.objects.get(pk=self.kwargs["company_id"], slug=self.kwargs["company_slug"])
     form.instance.user = self.request.user
     return super(CompanyDetail, self).form_valid(form)
+
+
+# class AddImageToCompany(generic.CreateView):
+#   model = models.Image
+#   fields = ("file", )
+#   success_url = reverse_lazy("company_detail", self.kwargs["company_id"], self.kwargs["company_name"])
+#   template_name = "add_image.html"
+
 
 
 class RegisterView(generic.CreateView):

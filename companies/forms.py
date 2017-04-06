@@ -14,11 +14,9 @@ class CompanyCreationForm(forms.ModelForm):
   address = forms.CharField(widget=forms.HiddenInput())
   lat = forms.CharField(widget=forms.HiddenInput())
   lng = forms.CharField(widget=forms.HiddenInput())
-  foursquare_id = forms.CharField(widget=forms.HiddenInput())
-  country = forms.CharField(widget=forms.HiddenInput())
-  city = forms.CharField(widget=forms.HiddenInput())
+  api_id = forms.CharField(widget=forms.HiddenInput(), label="Company", error_messages={"unique": "That company already exists! Add an image to it."})
   name = forms.CharField(widget=forms.HiddenInput())
 
   class Meta:
     model = Company
-    fields = ("severity","name", "address", "lat", "lng", "foursquare_id", "country", "city",)
+    fields = ("severity","name", "address", "lat", "lng", "api_id", )
