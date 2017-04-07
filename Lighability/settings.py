@@ -33,6 +33,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["2dc3014e.ngrok.io", "localhost"]
 
+AUTHENTICATION_BACKENDS = ('companies.backends.CaseInsensitiveModelBackend', )
+# AUTH_USER_MODEL = 'companies.CustomUser'
 AUTH_USER_MODEL = 'companies.User'
 
 
