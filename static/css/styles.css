@@ -118,7 +118,7 @@ section, header {
                 transition: 0.3s all; }
       #nav ul#nav__list li#nav__user #nav__user_icon #nav__user_icon_details.showing {
         display: block;
-        z-index: 3; }
+        z-index: 3000; }
       #nav ul#nav__list li#nav__user #nav__user_icon #nav__user_icon_image {
         width: 1.5em;
         height: 1.5em;
