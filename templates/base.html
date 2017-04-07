@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block doc-title %}{% endblock %}Lighability</title>
   <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+  <link href="https://opensource.keycdn.com/fontawesome/4.7.0/font-awesome.min.css" rel="stylesheet">
   {% block header %}
   {% endblock %}
 </head>
@@ -16,6 +17,7 @@
       <li class="nav__item" id="nav__header"><a href="{% url 'index' %}"><h1>Lighability</h1></a></li>
       <li class="nav__item" id="nav__search">
         <input type="text" id="nav__search_bar" placeholder="Search...">
+        <a href="{% url 'search' %}?q="><i aria-type="hidden" class="fa fa-search"></i></a>
       </li>
       {% if user.is_authenticated %}
       <li class="nav__item" id="nav__user">
@@ -42,6 +44,12 @@
   <script>
     const user_profile_icon = document.querySelector("#nav__user_icon_image");
     const user_profile_details = document.querySelector("#nav__user_icon_details");
+    const search_bar = document.querySelector("#nav__search_bar");
+    const search_bar_icon = document.querySelector("#nav__search a");
+
+    search_bar.addEventListener("keyup", function() {
+      search_bar_icon.href += search_bar.value
+    });
 
     user_profile_icon.addEventListener("mousedown", function() {
       user_profile_icon.classList.toggle("icon_image_showing");

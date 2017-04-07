@@ -92,7 +92,18 @@ section, header {
         #nav ul#nav__list li.nav__item a:hover {
           color: #766b85; }
     #nav ul#nav__list li#nav__search input {
-      border: 1px solid rgba(0, 0, 0, 0.5); }
+      border: 1px solid rgba(0, 0, 0, 0.3);
+      padding: 0.8em;
+      outline: 0;
+      border-radius: 20px;
+      width: 15em;
+      transition: 0.3s all; }
+      #nav ul#nav__list li#nav__search input:focus {
+        background: rgba(0, 0, 0, 0.05);
+        transition: 0.3s all; }
+      #nav ul#nav__list li#nav__search input:hover {
+        border: 1px solid rgba(0, 0, 0, 0.5);
+        transition: 0.3s all; }
     #nav ul#nav__list li#nav__user #nav__user_icon {
       position: absolute;
       top: 2em;
