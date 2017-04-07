@@ -1,14 +1,15 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 
 {% block title %}Add a new company - {% endblock %}
 
 {% block header %}
-<link rel="stylesheet" type="text/css" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.css" />
 <script type="text/javascript"
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAoNwv8C3iccJxBz28AjLKDnf5O6yZTwGY&libraries=places">
 </script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script type='text/javascript' src='http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js'></script>
+<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.js'></script>
 {% endblock %}
 
 {% block content %}
@@ -20,7 +21,7 @@
 </form> -->
 <form method="POST" autocomplete="off">
   {% csrf_token %}
-  <div id="map" style="height: 450px; width: 60vw; border: 1px solid #AAA;"></div>
+  <div id="map" style="height: 450px; border: 1px solid #AAA;"></div>
   {{ form.as_p }}
   
   <div class="near-companies-list">
@@ -29,7 +30,7 @@
     </ul>
   </div>
   <div class="existing_company"></div>
-  <div class="selected_company-info">
+  <div class="selected_company-info" id="selected_company-info">
     <h1>No Company Selected</h1>
     <ul>
       <li id="selected_company-address">No Address</li>
@@ -65,12 +66,33 @@ function addFields(i) {
 
   name_info.innerHTML = companies[i]['name'];
   address_info.innerHTML = companies[i]['vicinity'];
-  category_info.innerHTML = companies[i]['types'][0];
+  category_info.innerHTML = companies[i]['types'][0].split("_").join(" ");
 
-  existing_company.innerHTML = `<h1 class="alert">This company will be created</h1>`
   form_company_submit.value = "Report Company";
   form_company_submit.type = "submit";
   form_company_submit.removeEventListener("click", function() {});
+}
+
+function createMap(latitude, longitude) {
+  var userIcon = L.icon({
+      iconUrl: '{% static "img/user_icon.png" %}',
+      iconSize: [25, 25],
+      iconAnchor: [0,0],
+      popupAnchor: [-3, -76],
+  });
+
+  map = L.map('map', {
+      center: [latitude, longitude],
+      zoom: 19,
+      minZoom: 18,
+  });
+
+  L.tileLayer( 'https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic25hcGltYWwiLCJhIjoiZTRkMzQzYTFiZDExYTQ5NmI2NmU3NWMxNzgwYjNkMjAifQ.NadXwz8X4dxNl8DmEYXh4g', {
+      attribution: '&copy; <a href="https://www.mapbox.com/copyright">Mapbox</a>',
+      subdomains: ['a','b','c']
+  }).addTo(map);
+
+  L.marker([latitude, longitude], {icon: userIcon}).addTo(map);
 }
 
 function get_data(pos) {
@@ -79,21 +101,10 @@ function get_data(pos) {
   console.log(`Latitude : ${crd.latitude}`);
   console.log(`Longitude: ${crd.longitude}`);
 
-  
-  map = L.map('map', {
-      center: [crd.latitude, crd.longitude],
-      minZoom: 10,
-      zoom: 19
-  });
-
-  L.tileLayer( 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      subdomains: ['a','b','c']
-  }).addTo( map );
-
+  createMap(crd.latitude, crd.longitude);
   var user_location = new google.maps.LatLng(crd.latitude,crd.longitude);
   
-  var google_query = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+ crd.latitude + "," + crd.longitude +"&radius=500&key=AIzaSyAy4wkQFOn43Q4StCUqOp-0brxgAo9D5hc"
+  var google_query = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+ crd.latitude + "," + crd.longitude +"&radius=500&key=AIzaSyAy4wkQFOn43Q4StCUqOp-0brxgAo9D5hc";
 
   var request = {
     location: user_location,
@@ -132,7 +143,7 @@ function callback(results, status) {
   for (var i=0; i < companies.length; i++) {
     L.marker([companies[i]['geometry']['location'].lat(), companies[i]['geometry']['location'].lng()])
     .addTo(map)
-    .bindPopup("<h1>" + companies[i]["name"] + "</h1><ul><li>" + companies[i]["vicinity"] + "</li></ul><a href='#'' onclick='javascript:addFields(" +i +");'>Select</a>");
+    .bindPopup("<h1>" + companies[i]["name"] + "</h1><ul><li>" + companies[i]["vicinity"] + "</li></ul><a href='#selected_company-info'' onclick='javascript:addFields(" +i +");'>Select</a>");
     companies_output.innerHTML += `<li id="company-${i}"><label>
       <input type="radio" id="company-${i}-radio" onclick="javascript:addFields(${i});" name="name" value="${companies[i]["name"]}" required/>
       ${companies[i]["name"]}
@@ -168,8 +179,11 @@ $("#id_api_id").change(function() {
           form_company_submit.value = "Add an Image";
           form_company_submit.type = "button";
           form_company_submit.addEventListener("click", function() {
-            window.location.replace("/companies/" + data.company_pk + "/" + data.company_slug + "/add");
+            window.location.replace("/companies/" + data.company_pk + "/" + data.company_slug + "/new");
           });
+        } else {
+          existing_company.innerHTML = `<h1 class="alert">This company will be created</h1>`
+
         }
       }
     });

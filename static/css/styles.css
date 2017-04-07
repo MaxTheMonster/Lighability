@@ -117,10 +117,11 @@ section, header {
                 color: #F8C000;
                 transition: 0.3s all; }
       #nav ul#nav__list li#nav__user #nav__user_icon #nav__user_icon_details.showing {
-        display: block; }
+        display: block;
+        z-index: 3; }
       #nav ul#nav__list li#nav__user #nav__user_icon #nav__user_icon_image {
-        width: 3vw;
-        height: 3vw;
+        width: 1.5em;
+        height: 1.5em;
         position: relative;
         border-radius: 50%;
         transition: 0.3s all;

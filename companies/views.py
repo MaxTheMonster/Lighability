@@ -28,12 +28,18 @@ def validate_company(request):
 
 class IndexView(generic.TemplateView):
   template_name = "index.html" 
+
   def dispatch(self, request, *args, **kwargs):
     if request.user.is_authenticated():
       return redirect("home")
     else:
       return super(IndexView, self).dispatch(request, *args, **kwargs)
 
+  def get_context_data(self, *args, **kwargs):
+    context = super(IndexView, self).get_context_data(**kwargs)
+    latest_companies = models.Company.objects.all().order_by("-time")[:5]
+    context["companies"] = latest_companies
+    return context
 
 class HomeView(generic.CreateView):
   template_name = "home.html"
@@ -45,6 +51,7 @@ class HomeView(generic.CreateView):
     self.current_user = request.user
     self.company_images = []
     self.companies = models.Company.objects.filter(user__exact=self.current_user)
+    self.images = models.Image.objects.filter(user__exact=self.current_user)
 
     for company in self.companies:
       latest_company_image = models.Image.objects.filter(company=company)[:1]
@@ -59,7 +66,7 @@ class HomeView(generic.CreateView):
     context = super(HomeView, self).get_context_data(**kwargs)
     if self.companies.exists():
       context['companies'] = self.companies
-
+    context['images'] = self.images
     context['company_images'] = self.company_images
     return context
 
@@ -73,7 +80,7 @@ class AddImage(LoginRequiredMixin, generic.CreateView):
   fields = ("file",)
 
   def dispatch(self, request, *args, **kwargs):
-    self.current_company = models.Company.objects.get(pk__iexact=self.kwargs["company_id"])
+    self.current_company = models.Company.objects.get(pk=self.kwargs["company_id"])
 
     return super(AddImage, self).dispatch(request, *args, **kwargs)
 
@@ -126,12 +133,17 @@ class EditCompany(LoginRequiredMixin, generic.DeleteView, generic.UpdateView):
   slug_url_kwarg = 'company_slug'
   template_name = "update_company.html"
 
+  def get_success_url(self):
+    return reverse('company_detail', kwargs={'company_id': self.object.pk, 'company_slug': self.object.slug})
+
 
 class CompanyDetail(generic.CreateView):
   model = models.Image
   fields = ("file",)
-  success_url = "/"
   template_name = "company_detail.html"
+
+  def get_success_url(self):
+    return reverse('company_detail', kwargs={'company_id': self.current_company.pk, 'company_slug': self.current_company.slug})
 
   def get_context_data(self, **kwargs):
     context = super(CompanyDetail, self).get_context_data(**kwargs)
@@ -176,7 +188,7 @@ class UserProfile(generic.DetailView):
   context_object_name = "current_user"
 
   def get_object(self, queryset=None):
-    user = get_object_or_404(models.User.objects.filter(username=self.kwargs["username"]))
+    user = get_object_or_404(models.User.objects.filter(username=self.kwargs["username"]).order_by("time"))
     return user
 
   def dispatch(self, request, *args, **kwargs):
@@ -184,6 +196,7 @@ class UserProfile(generic.DetailView):
 
     self.company_images = []
     self.companies = models.Company.objects.filter(user__exact=self.current_user)
+    self.images = models.Image.objects.filter(user__exact=self.current_user)
 
     for company in self.companies:
       latest_company_image = models.Image.objects.filter(company=company)[:1]
@@ -196,6 +209,7 @@ class UserProfile(generic.DetailView):
     context = super(UserProfile, self).get_context_data(**kwargs)
     context['companies'] = self.companies
     context['company_images'] = self.company_images
+    context['images'] = self.images
     return context
 
 class LoginView(generic.FormView):

@@ -208,11 +208,12 @@ section, header {
 
         #nav__user_icon_details.showing {
           display: block;
+          z-index: 3;
         }
 
         #nav__user_icon_image {
-          width: 3vw;
-          height: 3vw;
+          width: 1.5em;
+          height: 1.5em;
           position: relative;
           border-radius: 50%;
           transition: $transition;

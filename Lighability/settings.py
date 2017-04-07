@@ -31,7 +31,7 @@ SECRET_KEY = 't^4zpld=%w37y=4f$$t^e4^j$h19z90l29hk=!ze88h9#5o3a1'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["2dc3014e.ngrok.io", "localhost"]
 
 AUTH_USER_MODEL = 'companies.User'
 

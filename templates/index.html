@@ -4,4 +4,22 @@
 <h1>Lighability - Don't leave your lights on!</h1>
 <a href="{% url 'user_register' %}">Register</a>
 
+<section class="latest-companies">
+  <h2>Latest Companies reported.</h2>
+  {% for company in companies %}
+  <div class="latest-companies__company">
+    <a href="{{ company.get_absolute_url }}">
+      <h3>{{ company.name }}</h3>
+    </a>
+      <ul>
+        <li>Location: {{ company.address }}</li>
+        <li>Posted on: {{ company.time }} by <a href="{{ company.user.get_absolute_url }}">{{ company.user }}</em></a></li>
+      </ul>
+      <div class="user-companies__company_serverity">
+        <span class="user-companies__severity">{{ company.get_severity_display }}</span>
+        <span class="severity-{{ company.severity }} severity"></span>
+      </div>
+  </div>
+  {% endfor %}
+</section>
 {% endblock %}

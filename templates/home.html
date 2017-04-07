@@ -49,4 +49,15 @@
   <h1>No Companies.</h1>
   {% endif %}
 </section>
+<section class="user-images">
+<h2>Images you have submitted.</h2>
+{% for image in images %}
+<div class="user-image" style="width:300px; display: inline-block;">
+  <a href="{{ image.company.get_absolute_url }}">
+    <h3>{{ image.company.name }}</h3>
+  <img src="{{ image }}" width="100%">
+  </a>
+</div>
+{% endfor %}
+</section>
 {% endblock %}

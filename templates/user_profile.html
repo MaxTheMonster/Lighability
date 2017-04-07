@@ -47,5 +47,13 @@
     {% endif %}
     {% endfor %}
   {% endfor %}
+
+
+</section>
+<section class="user-images">
+<h2>Images {{ current_user.username }} has submitted.</h2>
+{% for image in images %}
+<img src="{{ image.url }}">
+{% endfor %}
 </section>
 {% endblock %}

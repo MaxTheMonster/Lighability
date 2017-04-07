@@ -4,8 +4,29 @@
 
 {% block content %}
 <form method="post" autocomplete="off"  enctype='multipart/form-data'>
+  <h1>Add an image to this company</h1>
   {% csrf_token %}
   {{ form.as_p }}
+  <img src="" alt=""  style="display: block; width: 300px;" id="img_output">
   <input type="submit" value="Add Image to company">
 </form>
+
+<script type="text/javascript">
+function readURL(input) {
+
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            document.querySelector("#img_output").src = e.target.result;
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+document.querySelector("#id_file").addEventListener("change", function () {
+  readURL(this);
+});
+</script>
 {% endblock %}

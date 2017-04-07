@@ -1,7 +1,8 @@
 <h2>{{ company.name }}</h2>
 <ul>
-  <li>Location: {{ company.location }}</li>
-  <li>Posted on: {{ company.time }} by <em>{{ company.user }}</em></li>
+  <img src="https://api.mapbox.com/v4/mapbox.streets/{{ company.lng }},{{ company.lat }},18/200x200@2x.png?access_token=pk.eyJ1Ijoic25hcGltYWwiLCJhIjoiY2oxN3U1a3d4MDA0MjMybWx0bzgwM2JhMSJ9.81PxeYETQDcnCAmyRgbu3w">
+  <li>Location: {{ company.address }}</li>
+  <li>Posted on: {{ company.time }} by <a href="{{ company.user.get_absolute_url }}">{{ company.user }}</em></a></li>
   
   {% if images %}
   <h3>Images</h3>
@@ -15,9 +16,28 @@
   <form method="post" enctype='multipart/form-data'>
     {% csrf_token %}
     {{ form.as_p }}
+    <img src="" alt=""  style="display: block; width: 300px;" id="img_output">
     <input type="submit" value="Add Image">
   </form>
 </ul>
 {% if company.user == user %}
 <a href="{% url 'company_edit' company.pk company.slug %}">Edit</a>
+<script type="text/javascript">
+function readURL(input) {
+
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            document.querySelector("#img_output").src = e.target.result;
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+document.querySelector("#id_file").addEventListener("change", function () {
+  readURL(this);
+});
+</script>
 {% endif %}
