@@ -76,7 +76,7 @@ function addFields(i) {
 function createMap(latitude, longitude) {
   var userIcon = L.icon({
       iconUrl: '{% static "img/user_icon.png" %}',
-      iconSize: [25, 25],
+      iconSize: [15, 15],
       iconAnchor: [0,0],
       popupAnchor: [-3, -76],
   });
@@ -84,10 +84,10 @@ function createMap(latitude, longitude) {
   map = L.map('map', {
       center: [latitude, longitude],
       zoom: 19,
-      minZoom: 18,
+      minZoom: 15,
   });
 
-  L.tileLayer( 'https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic25hcGltYWwiLCJhIjoiZTRkMzQzYTFiZDExYTQ5NmI2NmU3NWMxNzgwYjNkMjAifQ.NadXwz8X4dxNl8DmEYXh4g', {
+  L.tileLayer( 'https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic25hcGltYWwiLCJhIjoiY2oxN3U1a3d4MDA0MjMybWx0bzgwM2JhMSJ9.81PxeYETQDcnCAmyRgbu3w', {
       attribution: '&copy; <a href="https://www.mapbox.com/copyright">Mapbox</a>',
       subdomains: ['a','b','c']
   }).addTo(map);

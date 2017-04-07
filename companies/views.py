@@ -17,12 +17,14 @@ from .mixins import LoginRequiredMixin
 def validate_company(request):
   id = request.GET.get('company_id', None)
   company_query = models.Company.objects.filter(api_id__iexact=id).values()
-  data = {
-      'is_taken': company_query.exists(),
-      'company_pk': company_query[0]["id"],
-      'company_name': company_query[0]["name"],
-      'company_slug': company_query[0]["slug"],
-  }
+  is_taken = company_query.exists()
+  data = {'is_taken': is_taken}
+
+  if is_taken == True:
+    data['company_pk'] = company_query[0]["id"]
+    data['company_name'] = company_query[0]["name"]
+    data['company_slug'] = company_query[0]["slug"]
+
   return JsonResponse(data)
 
 
