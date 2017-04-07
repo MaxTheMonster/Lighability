@@ -13,8 +13,8 @@
 {% endblock %}
 
 {% block content %}
-<h1>Add a new image</h1>
-
+<h1>Find your company</h1>
+<h6>(Can't find it on the map? <a href="#near-companies-list">Click here</a>)</h6>
 <!-- <form method="post" enctype='multipart/form-data'>
 {% csrf_token %}
 
@@ -24,7 +24,7 @@
   <div id="map" style="height: 450px; border: 1px solid #AAA;"></div>
   {{ form.as_p }}
   
-  <div class="near-companies-list">
+  <div class="near-companies-list" id="near-companies-list">
     <ul>
       
     </ul>
@@ -183,7 +183,7 @@ $("#id_api_id").change(function() {
           form_company_submit.value = "Add an Image";
           form_company_submit.type = "button";
           form_company_submit.addEventListener("click", function() {
-            window.location.replace("/companies/" + data.company_pk + "/" + data.company_slug + "/new");
+            window.location.replace("/companies/" + data.company_pk + "/" + data.company_slug + "/new/");
           });
         } else {
           existing_company.innerHTML = `<h1 class="alert">This company will be created</h1>`

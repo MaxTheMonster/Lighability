@@ -76,6 +76,22 @@ class HomeView(generic.CreateView):
     form.instance.user = self.request.user
     return super(HomeView, self).form_valid(form)
 
+
+class SearchCompanies(generic.ListView):
+  template_name = "search_results.html"
+  model = models.Company
+
+  def get_queryset(self):
+    try:
+      q = self.kwargs['q']
+    except:
+      q = ''
+    if (q != ''):
+      object_list = self.model.objects.filter(q__icontains = q)
+    else:
+      object_list = self.model.objects.all()
+    return object_list
+
 class AddImage(LoginRequiredMixin, generic.CreateView):
   model = models.Image
   template_name = "add_company_image.html"
@@ -114,10 +130,9 @@ class AddCompany(LoginRequiredMixin, generic.CreateView):
   model = models.Company
   queryset = models.Image
   template_name = "add_company.html"
-  success_url = reverse_lazy("")
 
   def get_success_url(self):
-    return reverse('company_detail', kwargs={'company_id': self.object.pk, 'company_slug': self.object.slug})
+    return reverse('company_image', kwargs={'company_id': self.object.pk, 'company_slug': self.object.slug})
 
   def form_valid(self, form):
     # self.queryset = form.save()

@@ -14,10 +14,9 @@ urlpatterns = [
   url(r'^register/$', views.RegisterView.as_view(), name="user_register"),
   url(r'^user/(?P<username>.+)/edit', views.EditUser.as_view(), name="edit_user"),
   url(r'^user/(?P<username>.+)$', views.UserProfile.as_view(), name="user_profile"),
-  
+    
+  url(r'^search/$', views.SearchCompanies.as_view(), name="search"),  
   url(r'^new/$', views.AddCompany.as_view(), name="new_company"),
-  
-
   url(r'^companies/(?P<company_id>[^/]+)/(?P<company_slug>[-\w]+)/$', views.CompanyDetail.as_view(), name="company_detail"),
   url(r'^companies/(?P<company_id>[^/]+)/(?P<company_slug>[-\w]+)/edit/$', views.EditCompany.as_view(), name="company_edit"),
   url(r'^companies/(?P<company_id>[^/]+)/(?P<company_slug>[-\w]+)/new/$', views.AddImage.as_view(), name="company_image"),
