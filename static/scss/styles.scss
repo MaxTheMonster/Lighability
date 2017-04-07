@@ -167,11 +167,19 @@ section, header {
         }
       }
     }
+    
+    li#nav__search {
+      input {
+        border: 1px solid rgba(0,0,0,0.5);
+      }
+    }
 
     li#nav__user {
 
       #nav__user_icon { 
-        position: relative;
+        position: absolute;
+        top: 2em;
+        right: 1em;
 
         #nav__user_icon_details {
           display: none;

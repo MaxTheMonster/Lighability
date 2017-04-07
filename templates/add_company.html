@@ -68,9 +68,10 @@ function addFields(i) {
   address_info.innerHTML = companies[i]['vicinity'];
   category_info.innerHTML = companies[i]['types'][0].split("_").join(" ");
 
-  form_company_submit.value = "Report Company";
   form_company_submit.type = "submit";
   form_company_submit.removeEventListener("click", function() {});
+
+  window.location.href = "#selected_company-info"
 }
 
 function createMap(latitude, longitude) {
@@ -101,10 +102,6 @@ function createMap(latitude, longitude) {
 
 function get_data(pos) {
   var crd = pos.coords;
-  console.log('Your current position is:');
-  console.log(`Latitude : ${crd.latitude}`);
-  console.log(`Longitude: ${crd.longitude}`);
-
   createMap(crd.latitude, crd.longitude);
   var user_location = new google.maps.LatLng(crd.latitude,crd.longitude);
   
@@ -112,7 +109,7 @@ function get_data(pos) {
 
   var request = {
     location: user_location,
-    radius: '100',
+    radius: '75',
   };
 
   service = new google.maps.places.PlacesService(document.createElement('div'));
@@ -187,6 +184,7 @@ $("#id_api_id").change(function() {
           });
         } else {
           existing_company.innerHTML = `<h1 class="alert">This company will be created</h1>`
+          form_company_submit.value = "Report Company";
 
         }
       }

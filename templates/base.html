@@ -14,6 +14,9 @@
     <ul id="nav__list">
       <li class="nav__item" id="nav__add_company"><a href="{% url 'new_company' %}">Report</a></li>
       <li class="nav__item" id="nav__header"><a href="{% url 'index' %}"><h1>Lighability</h1></a></li>
+      <li class="nav__item" id="nav__search">
+        <input type="text" id="nav__search_bar" placeholder="Search...">
+      </li>
       {% if user.is_authenticated %}
       <li class="nav__item" id="nav__user">
         <div id="nav__user_icon">
@@ -27,9 +30,7 @@
           </div>
         </div>
       </li>
-      <li class="nav__item" id="nav__search">
-        <input type="text" id="nav__search_bar" placeholder="Search...">
-      </li>
+      
       {% else %}
       
       <li class="nav__item nav__user_action"><a href="{% url 'login' %}">Login</a></li>
