@@ -20,7 +20,7 @@
 </form> -->
 <form method="POST" autocomplete="off">
   {% csrf_token %}
-  <div id="map" style="height: 600px; border: 1px solid #AAA;"></div>
+  <div id="map" style="height: 450px; width: 60vw; border: 1px solid #AAA;"></div>
   {{ form.as_p }}
   
   <div class="near-companies-list">
@@ -82,8 +82,8 @@ function get_data(pos) {
   
   map = L.map('map', {
       center: [crd.latitude, crd.longitude],
-      minZoom: 17,
-      zoom: 18
+      minZoom: 10,
+      zoom: 19
   });
 
   L.tileLayer( 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

@@ -4,7 +4,7 @@ from django.http import HttpResponse, JsonResponse
 
 from . import models, forms
 
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
@@ -67,10 +67,23 @@ class HomeView(generic.CreateView):
     form.instance.user = self.request.user
     return super(HomeView, self).form_valid(form)
 
-# class AddImage(LoginRequiredMixin, generic.CreateView):
-#   model = models.Image
-#   template_name = "add_company.html"
-#   success_url = reverse("home")
+class AddImage(LoginRequiredMixin, generic.CreateView):
+  model = models.Image
+  template_name = "add_company_image.html"
+  fields = ("file",)
+
+  def dispatch(self, request, *args, **kwargs):
+    self.current_company = models.Company.objects.get(pk__iexact=self.kwargs["company_id"])
+
+    return super(AddImage, self).dispatch(request, *args, **kwargs)
+
+  def get_success_url(self):
+    return reverse('company_detail', kwargs={'company_id': self.current_company.pk, 'company_slug': self.current_company.slug})
+
+  def form_valid(self, form):
+    form.instance.company = self.current_company
+    form.instance.user = self.request.user
+    return super(AddImage, self).form_valid(form)
 
 # class CheckCompanyExistance(generic.TemplateView):
 #   def
@@ -95,7 +108,7 @@ class AddCompany(LoginRequiredMixin, generic.CreateView):
   success_url = reverse_lazy("")
 
   def get_success_url(self):
-     return self.model.get_absolute_url()
+    return reverse('company_detail', kwargs={'company_id': self.object.pk, 'company_slug': self.object.slug})
 
   def form_valid(self, form):
     # self.queryset = form.save()

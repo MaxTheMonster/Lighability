@@ -16,10 +16,11 @@ urlpatterns = [
   url(r'^user/(?P<username>.+)$', views.UserProfile.as_view(), name="user_profile"),
   
   url(r'^new/$', views.AddCompany.as_view(), name="new_company"),
-  # url(r'^new/(?P<company_id>[^/]+)/(?P<company_slug>[-\w]+)/$', views.AddImageToCompany.as_view(), name="company_image"),
+  
 
   url(r'^companies/(?P<company_id>[^/]+)/(?P<company_slug>[-\w]+)/$', views.CompanyDetail.as_view(), name="company_detail"),
   url(r'^companies/(?P<company_id>[^/]+)/(?P<company_slug>[-\w]+)/edit/$', views.EditCompany.as_view(), name="company_edit"),
+  url(r'^companies/(?P<company_id>[^/]+)/(?P<company_slug>[-\w]+)/new/$', views.AddImage.as_view(), name="company_image"),
   url(r'^companies/(?P<company_id>[^/]+)/(?P<company_slug>[-\w]+)/delete/$', views.CompanyDelete.as_view(), name="delete_company"),
   url(r'^ajax/validate_company/$', views.validate_company, name='validate_company'),
   url(r'^admin/', admin.site.urls),
