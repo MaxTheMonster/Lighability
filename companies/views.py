@@ -92,6 +92,11 @@ class SearchCompanies(generic.ListView):
       object_list = self.model.objects.all()
     return object_list
 
+  def get_context_data(self, **kwargs):
+    context = super(SearchCompanies, self).get_context_data(**kwargs)
+    context["results"] = self.object_list
+    context["search_term"] = self.q
+
 class AddImage(LoginRequiredMixin, generic.CreateView):
   model = models.Image
   template_name = "add_company_image.html"

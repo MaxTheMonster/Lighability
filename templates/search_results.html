@@ -3,7 +3,16 @@
 {% block doc-title %}{{ search_term }} - {% endblock %}
 
 {% block content %}
-{% for result in results %}
-
-{% endfor}
+<section class="search_results">
+<h1>Results for {{ search_term }}</h1>
+{% for company in results %}
+<div class="search_results__result">
+ <a href="{{ company.get_absolute_url }}"><h2>{{ company.name }}</h2></a>
+  <ul>
+    <li>{{ company.address }}</li>
+    <li>Posted on: {{ company.time }} by <a href="{{ company.user.get_absolute_url }}">{{ company.user }}</em></a></li>
+  </ul>
+</div>
+{% endfor %}
+</section>
 {% endblock %}
