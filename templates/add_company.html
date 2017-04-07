@@ -74,6 +74,10 @@ function addFields(i) {
 }
 
 function createMap(latitude, longitude) {
+  // map = new google.maps.Map(document.getElementById('map'), {
+  //           center: {lat: latitude, lng: longitude},
+  //           zoom: 18
+  //         });
   var userIcon = L.icon({
       iconUrl: '{% static "img/user_icon.png" %}',
       iconSize: [15, 15],
