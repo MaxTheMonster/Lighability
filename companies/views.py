@@ -92,12 +92,10 @@ class AddCompany(LoginRequiredMixin, generic.CreateView):
   model = models.Company
   queryset = models.Image
   template_name = "add_company.html"
-  success_url = "/"
+  success_url = reverse_lazy("")
 
-  def post(self, request, *args, **kwargs):
-    
-
-    return super(AddCompany, self).post(request, *args, **kwargs)
+  def get_success_url(self):
+     return self.model.get_absolute_url()
 
   def form_valid(self, form):
     # self.queryset = form.save()
