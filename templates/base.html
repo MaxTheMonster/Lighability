@@ -47,8 +47,15 @@
     const search_bar = document.querySelector("#nav__search_bar");
     const search_bar_icon = document.querySelector("#nav__search a");
 
-    search_bar.addEventListener("keyup", function() {
+    search_bar.addEventListener("change", function() {
       search_bar_icon.href += search_bar.value
+    });
+    
+    search_bar.addEventListener("keydown", function(e) {
+      if (e.keyCode == 13) {
+        search_bar_icon.href += search_bar.value
+        window.location.replace(search_bar_icon.href);
+      }
     });
 
     user_profile_icon.addEventListener("mousedown", function() {

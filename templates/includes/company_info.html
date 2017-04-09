@@ -7,7 +7,7 @@
   {% if images %}
   <h3>Images</h3>
   {% for image in images %}
-    <img src="{{ image }}" height="300px">
+    <img class="company_detail__image" src="{{ image }}" height="300px">
   {% endfor %}
   {% else %}
   <h3>No Images</h3>
@@ -23,17 +23,18 @@
 {% if company.user == user %}
 <a href="{% url 'company_edit' company.pk company.slug %}">Edit</a>
 <script type="text/javascript">
+const company_images = document.querySelectorAll(".company_detail__image");
+
 function readURL(input) {
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
 
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-
-        reader.onload = function (e) {
-            document.querySelector("#img_output").src = e.target.result;
-        }
-
-        reader.readAsDataURL(input.files[0]);
+    reader.onload = function (e) {
+      document.querySelector("#img_output").src = e.target.result;
     }
+
+    reader.readAsDataURL(input.files[0]);
+  }
 }
 
 document.querySelector("#id_file").addEventListener("change", function () {

@@ -4,8 +4,10 @@
 
 {% block content %}
 <section class="search_results">
-<h1>Results for {{ search_term }}</h1>
+{% if results %}
+<h1>Results for "<strong>{{ search_term }}</strong>"</h1>
 {% for company in results %}
+<hr>
 <div class="search_results__result">
  <a href="{{ company.get_absolute_url }}"><h2>{{ company.name }}</h2></a>
   <ul>
@@ -14,5 +16,8 @@
   </ul>
 </div>
 {% endfor %}
+{% else %}
+<h1>No results for "<strong>{{ search_term }}</strong>"</h1>
+{% endif %}
 </section>
 {% endblock %}

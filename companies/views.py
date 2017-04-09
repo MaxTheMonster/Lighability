@@ -83,19 +83,21 @@ class SearchCompanies(generic.ListView):
 
   def get_queryset(self):
     try:
-      q = self.kwargs['q']
+      self.q = self.request.GET.get('q')
     except:
-      q = ''
-    if (q != ''):
-      object_list = self.model.objects.filter(q__icontains = q)
+      self.q = ''
+    if (self.q != ''):
+      object_list = self.model.objects.filter(name__icontains=self.q)
     else:
       object_list = self.model.objects.all()
+    print(object_list)
     return object_list
 
   def get_context_data(self, **kwargs):
     context = super(SearchCompanies, self).get_context_data(**kwargs)
     context["results"] = self.object_list
     context["search_term"] = self.q
+    return context
 
 class AddImage(LoginRequiredMixin, generic.CreateView):
   model = models.Image

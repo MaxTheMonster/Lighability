@@ -1,5 +1,7 @@
 import os
 
+from PIL import Image as PImage
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.utils import timezone
@@ -24,10 +26,38 @@ class User(AbstractUser):
           },
       )
   points = models.IntegerField(default=1)
-  profile_picture = models.FileField(upload_to='profile_pictures/', default="../static/img/profile.jpg")
+  profile_picture = models.ImageField(height_field="image_height", width_field="image_width", upload_to='profile_pictures/', default="../static/img/profile.jpg")
+  image_height = models.PositiveIntegerField(null=True, blank=True, editable=False, default="100")
+  image_width = models.PositiveIntegerField(null=True, blank=True, editable=False, default="100")
 
   def get_absolute_url(self):
     return reverse("user_profile", kwargs={"username": self.username})
+
+
+  def save(self, *args, **kwargs):
+    if not self.profile_picture:
+      return super(User, self).save()
+
+    image = PImage.open(self.profile_picture)
+    (width, height) = image.size     
+    size = ( 100, 100)
+    image = image.resize(size, PImage.ANTIALIAS)
+    image.save(self.profile_picture.path)
+    return super(User, self).save()
+  # def save(self, *args, **kwargs):
+  #   img = PImage.open(self.profile_picture)
+  #   half_the_width = img.size[0] / 2
+  #   half_the_height = img.size[1] / 2
+  #   self.profile_picture = img.crop(
+  #       (
+  #           half_the_width - 50,
+  #           half_the_height - 50,
+  #           half_the_width + 50,
+  #           half_the_height + 50
+  #       )
+  #   )
+  #   super(User, self).save(*args, **kwargs)
+
 
 class Company(models.Model):
   SEVERITY = (("1", "First"), ("2", "Second"), ("3", "Third"), ("4", "Fourth"), ("5", "Fifth"), ("6", "Sixth"), ("7", "Seventh"),)
@@ -54,7 +84,7 @@ class Company(models.Model):
 
 
 class Image(models.Model):
-  file = models.FileField(upload_to='company_images/')
+  file = models.ImageField(upload_to='company_images/')
   time = models.DateTimeField(default=timezone.now)
   user = models.ForeignKey(User, related_name="company_image")
   company = models.ForeignKey(Company, on_delete=models.CASCADE)
