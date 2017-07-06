@@ -9,9 +9,6 @@ from django.core.urlresolvers import reverse
 from django.utils.text import slugify
 from django.core.validators import RegexValidator
 
-from Lighability.settings import STATIC_URL
-
-
 class User(AbstractUser):
   username = models.CharField(
           max_length=20,
@@ -74,10 +71,7 @@ class Company(models.Model):
   def __str__(self):
     return self.name
 
-  def save(self, *args, **kwargs):
-    if not self.pk:
-        self.slug = slugify(self.name)
-    super(Company, self).save(*args, **kwargs)
+ 
 
   def get_absolute_url(self):
     return reverse("company_detail", kwargs={"company_id": self.pk, "company_slug": self.slug})
