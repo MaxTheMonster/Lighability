@@ -36,7 +36,7 @@ class User(AbstractUser):
       return super(User, self).save()
 
     image = PImage.open(self.profile_picture)
-    (width, height) = image.size     
+    (width, height) = image.size
     size = ( 100, 100)
     image = image.resize(size, PImage.ANTIALIAS)
     image.save(self.profile_picture.path)
@@ -71,8 +71,12 @@ class Company(models.Model):
   def __str__(self):
     return self.name
 
- 
+  def save(self, *args, **kwargs):
+    if not self.pk:
+      self.slug = slugify(self.name)
 
+    return super(Company, self).save(*args)
+  
   def get_absolute_url(self):
     return reverse("company_detail", kwargs={"company_id": self.pk, "company_slug": self.slug})
 
@@ -85,4 +89,4 @@ class Image(models.Model):
 
   def __str__(self):
     return self.file.url
-    
+
